@@ -28,6 +28,7 @@ public class EmployeeService {
 
     @GET
     @Produces(MediaType.APPLICATION_XML)
+    //@Produces(MediaType.APPLICATION_JSON)
     public List<Employee> getUsers() {
         return employeeDb.get("0", 0);
     }
@@ -35,13 +36,17 @@ public class EmployeeService {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_XML)
+    //@Produces(MediaType.APPLICATION_JSON)
     public List<Employee> getUser(@PathParam("id") String userid) {
         return employeeDb.get(userid, 1);
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_XML)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    //@Produces(MediaType.APPLICATION_XML)
+    //@Produces(MediaType.APPLICATION_JSON)
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    //@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
     public String createUser(@FormParam("id") String id,
             @FormParam("name") String name,
             @FormParam("surName") String surName,
@@ -50,25 +55,30 @@ public class EmployeeService {
             @FormParam("birthDay") String birthDay,
             @FormParam("gender") String genderStr
     ) throws IOException {
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         Gender gender;
-        try {
+        /*try {
             gender = Gender.valueOfIgnoreCase(genderStr);
         } catch (IllegalArgumentException e) {
             gender = Gender.valueOf(genderStr);
-        }
-
-        Employee user = new Employee(Integer.parseInt(id), name, surName, Double.parseDouble(salary), LocalDate.parse(hireDay, formatter), LocalDate.parse(birthDay, formatter), gender);
-        int result = employeeDb.insert(user);
+        }*/
+        gender = Gender.valueOf("MALE");
+        System.out.println("name="+name);
+ return SUCCESS_RESULT;
+        //Employee user = new Employee(Integer.parseInt(id), name, surName, Double.parseDouble(salary), LocalDate.parse(hireDay, formatter), LocalDate.parse(birthDay, formatter), gender);
+        /*int result = employeeDb.insert(user);
         if (result == 1) {
             return SUCCESS_RESULT;
-        }
-        return FAILURE_RESULT;
+        }*/
+                 
+        //return FAILURE_RESULT;
     }
 
     @PUT
     @Produces(MediaType.APPLICATION_XML)
+    //@Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String updateUser(@FormParam("id") String id,
             @FormParam("name") String name,
@@ -81,11 +91,12 @@ public class EmployeeService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         Gender gender;
-        try {
+        /*try {
             gender = Gender.valueOfIgnoreCase(genderStr);
         } catch (IllegalArgumentException e) {
             gender = Gender.valueOf(genderStr);
-        }
+        }*/
+        gender = Gender.valueOf("M");
 
         Employee user = new Employee(Integer.parseInt(id), name, surName, Double.parseDouble(salary), LocalDate.parse(hireDay, formatter), LocalDate.parse(birthDay, formatter), gender);
         int result = employeeDb.update(user);
@@ -97,6 +108,7 @@ public class EmployeeService {
 
     @DELETE
     @Produces(MediaType.APPLICATION_XML)
+    //@Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public String deleteUser(@FormParam("id") String id,
             @FormParam("name") String name,
@@ -126,6 +138,7 @@ public class EmployeeService {
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_XML)
+    //@Produces(MediaType.APPLICATION_JSON)
     public String deleteUserId(@PathParam("id") int id) {
         int result = employeeDb.delete(id);
         if (result == 1) {
@@ -136,6 +149,7 @@ public class EmployeeService {
 
     @OPTIONS
     @Produces(MediaType.APPLICATION_XML)
+    //@Produces(MediaType.APPLICATION_JSON)
     public String getSupportedOperations(){
       return "<operations>GET, PUT, POST, DELETE</operations>";
     
